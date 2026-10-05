@@ -1,0 +1,311 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-card-border: hsl(var(--card-border));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-popover-border: hsl(var(--popover-border));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-primary-border: var(--primary-border);
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-secondary-border: var(--secondary-border);
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-muted-border: var(--muted-border);
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-accent-border: var(--accent-border);
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-destructive-border: var(--destructive-border);
+
+  --color-chart-1: hsl(var(--chart-1));
+  --color-chart-2: hsl(var(--chart-2));
+  --color-chart-3: hsl(var(--chart-3));
+  --color-chart-4: hsl(var(--chart-4));
+  --color-chart-5: hsl(var(--chart-5));
+
+  --color-sidebar: hsl(var(--sidebar));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-primary-border: var(--sidebar-primary-border);
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-accent-border: var(--sidebar-accent-border);
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
+
+  --font-sans: var(--app-font-sans);
+  --font-serif: var(--app-font-serif);
+  --font-mono: var(--app-font-mono);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --color-abyss: #020c14;
+  --color-deep: #041520;
+  --color-mid: #072033;
+  --color-shallow: #0e3a52;
+  --color-ice: #d8e3fb;
+  --color-cyan: #00dce5;
+  --color-up: #4edea3;
+  --color-down: #ffb4ab;
+
+  /* Remap Tailwind blue → Deepberg ice cyan */
+  --color-blue-50: #e8feff;
+  --color-blue-100: #c5fbff;
+  --color-blue-200: #8ef6fb;
+  --color-blue-300: #4aedf3;
+  --color-blue-400: #00dce5;
+  --color-blue-500: #00b8c2;
+  --color-blue-600: #008f99;
+  --color-blue-700: #0e3a52;
+  --color-blue-800: #072033;
+  --color-blue-900: #041520;
+  --color-blue-950: #020c14;
+}
+
+:root {
+  --button-outline: rgba(0,0,0, .10);
+  --badge-outline: rgba(0,0,0, .05);
+  --opaque-button-border-intensity: -8;
+  --elevate-1: rgba(0,0,0, .03);
+  --elevate-2: rgba(0,0,0, .08);
+
+  /* Refined slate palette — lower saturation reads more professional than a
+     bright navy, and the card/popover sit ABOVE the background for real depth. */
+  --background: 222 20% 8%;
+  --foreground: 210 16% 92%;
+  --card: 222 17% 11%;
+  --card-foreground: 210 16% 92%;
+  --card-border: 220 13% 19%;
+  --popover: 222 18% 10%;
+  --popover-foreground: 214 13% 66%;
+  --popover-border: 220 13% 19%;
+  --primary: 214 85% 60%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 220 14% 15%;
+  --secondary-foreground: 210 16% 96%;
+  --muted: 222 15% 13%;
+  --muted-foreground: 217 11% 62%;
+  --accent: 220 14% 17%;
+  --accent-foreground: 210 16% 96%;
+  --destructive: 0 70% 55%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 220 13% 17%;
+  --input: 220 13% 17%;
+  --ring: 214 85% 60%;
+
+  --sidebar: 224 24% 6%;
+  --sidebar-foreground: 210 15% 88%;
+  --sidebar-border: 220 13% 14%;
+  --sidebar-primary: 214 85% 60%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 220 14% 16%;
+  --sidebar-accent-foreground: 210 16% 92%;
+  --sidebar-ring: 214 85% 60%;
+
+  --chart-1: 220 70% 50%;
+  --chart-2: 160 60% 45%;
+  --chart-3: 30 80% 55%;
+  --chart-4: 280 65% 60%;
+  --chart-5: 340 75% 55%;
+
+  --app-font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --app-font-serif: ui-serif, Georgia, serif;
+  --app-font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --radius: 0.625rem;
+
+  --primary-border: hsl(from hsl(var(--primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+  --secondary-border: hsl(from hsl(var(--secondary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+  --muted-border: hsl(from hsl(var(--muted)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+  --accent-border: hsl(from hsl(var(--accent)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+  --destructive-border: hsl(from hsl(var(--destructive)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+  --sidebar-primary-border: hsl(from hsl(var(--sidebar-primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+  --sidebar-accent-border: hsl(from hsl(var(--sidebar-accent)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+}
+
+.dark {
+  --button-outline: rgba(216,227,251, .08);
+  --badge-outline: rgba(216,227,251, .05);
+  --opaque-button-border-intensity: 9;
+  --elevate-1: rgba(0,220,229, .04);
+  --elevate-2: rgba(216,227,251, .07);
+
+  /* Deepberg abyss — #081425 / #d8e3fb / ice cyan */
+  --background: 210 64% 9%;
+  --foreground: 221 81% 92%;
+  --card: 206 76% 11%;
+  --card-foreground: 221 81% 92%;
+  --card-border: 201 40% 18%;
+  --popover: 204 78% 7%;
+  --popover-foreground: 215 30% 70%;
+  --popover-border: 201 40% 18%;
+  --primary: 182 100% 45%;
+  --primary-foreground: 204 82% 6%;
+  --secondary: 204 78% 8%;
+  --secondary-foreground: 221 81% 92%;
+  --muted: 206 50% 12%;
+  --muted-foreground: 215 20% 58%;
+  --accent: 201 55% 16%;
+  --accent-foreground: 221 81% 92%;
+  --destructive: 8 70% 62%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 210 30% 16%;
+  --input: 210 30% 16%;
+  --ring: 182 100% 45%;
+
+  --sidebar: 204 78% 7%;
+  --sidebar-foreground: 221 81% 92%;
+  --sidebar-border: 210 30% 14%;
+  --sidebar-primary: 182 100% 45%;
+  --sidebar-primary-foreground: 204 82% 6%;
+  --sidebar-accent: 201 50% 14%;
+  --sidebar-accent-foreground: 221 81% 92%;
+  --sidebar-ring: 182 100% 45%;
+
+  --chart-1: 182 100% 45%;
+  --chart-2: 160 55% 58%;
+  --chart-3: 201 71% 32%;
+  --chart-4: 221 81% 80%;
+  --chart-5: 8 80% 70%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    letter-spacing: -0.011em;
+  }
+  /* Tighter, more confident headings */
+  h1, h2, h3, h4 {
+    letter-spacing: -0.02em;
+  }
+  /* Align numbers in tables/metrics like a real trading terminal */
+  .font-mono, [class*="tabular"], table {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Deepberg glass — ice edge + abyss fill */
+.glass-card {
+  background: rgba(21, 32, 49, 0.5);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(216, 227, 251, 0.05);
+  border-top: 1px solid rgba(216, 227, 251, 0.12);
+}
+
+.glass-card-blue {
+  background: rgba(21, 32, 49, 0.55);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 220, 229, 0.18);
+  box-shadow: 0 0 30px rgba(0, 220, 229, 0.08);
+}
+
+.glow-blue {
+  box-shadow: 0 0 30px rgba(0, 220, 229, 0.12);
+}
+.glow-green {
+  box-shadow: 0 0 24px rgba(78, 222, 163, 0.12);
+}
+.glow-red {
+  box-shadow: 0 0 24px rgba(147, 0, 10, 0.12);
+}
+
+.canvas-grid {
+  background-image: radial-gradient(rgba(216, 227, 251, 0.045) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.node-connector {
+  background: linear-gradient(90deg, #00dce5 0%, transparent 100%);
+  height: 2px;
+}
+
+.active-nav-glow {
+  box-shadow: inset 0 0 14px rgba(0, 220, 229, 0.12);
+}
+
+.heatmap-cell {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.heatmap-cell:hover {
+  transform: scale(1.02);
+  z-index: 10;
+  box-shadow: 0 2px 12px rgba(2, 12, 20, 0.5), 0 0 0 1px rgba(0, 220, 229, 0.22);
+}
+
+.ai-gradient-text {
+  background: linear-gradient(135deg, #d8e3fb 0%, #00dce5 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.glass-card-copilot {
+  background: rgba(21, 32, 49, 0.45);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(216, 227, 251, 0.08);
+}
+
+.card-header-strip {
+  background: rgba(216, 227, 251, 0.03);
+  border-bottom: 1px solid rgba(216, 227, 251, 0.06);
+}
+
+.regime-pill {
+  background: rgba(8, 20, 37, 0.7);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(216, 227, 251, 0.1);
+}
+
+/* Sentiment glow effects */
+.sentiment-glow-bullish {
+  box-shadow: inset 0 0 12px rgba(78, 222, 163, 0.12);
+}
+.sentiment-glow-bearish {
+  box-shadow: inset 0 0 12px rgba(255, 84, 81, 0.12);
+}
+
+/* Custom scrollbar — thin subtle */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+/* Fonts (Inter + JetBrains Mono) are loaded via <link> in index.html. */
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(16px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}

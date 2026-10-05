@@ -1,0 +1,38 @@
+import { Router, IRouter } from "express";
+import healthRouter from "./health";
+import stocksRouter from "./stocks";
+import optionsRouter from "./options";
+import newsRouter from "./news";
+import tickerRouter from "./ticker";
+import fearGreedRouter from "./fear-greed";
+import sectorsRouter from "./sectors";
+import watchlistRouter from "./watchlist";
+import marketRegimeRouter from "./market-regime";
+import compareRouter from "./compare";
+import askDeepbergRouter from "./ask-deepberg";
+import optionsHeatmapRouter from "./options-heatmap";
+import analysisRouter from "./analysis";
+import signalsRouter from "./signals";
+import economicCalendarRouter from "./economic-calendar";
+import recapRouter from "./recap";
+
+const router: IRouter = Router();
+
+router.use(healthRouter);
+router.use(stocksRouter);
+router.use(optionsRouter);
+router.use(newsRouter);
+router.use(tickerRouter);
+router.use(fearGreedRouter);
+router.use(sectorsRouter);
+router.use(watchlistRouter);
+router.use(marketRegimeRouter);
+router.use(compareRouter);
+router.use(askDeepbergRouter);
+router.use(optionsHeatmapRouter);
+router.use(analysisRouter);
+router.use(signalsRouter);
+router.use(economicCalendarRouter);
+router.use(recapRouter);
+
+export default router;

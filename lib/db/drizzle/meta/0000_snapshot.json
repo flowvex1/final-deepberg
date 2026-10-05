@@ -1,0 +1,121 @@
+{
+  "id": "649597ed-e3be-4ddd-b52d-367d5819702e",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.options_history": {
+      "name": "options_history",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "symbol": {
+          "name": "symbol",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "date": {
+          "name": "date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "put_call_ratio": {
+          "name": "put_call_ratio",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "total_call_volume": {
+          "name": "total_call_volume",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "total_put_volume": {
+          "name": "total_put_volume",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "call_premium": {
+          "name": "call_premium",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "put_premium": {
+          "name": "put_premium",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "unusual_count": {
+          "name": "unusual_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "current_price": {
+          "name": "current_price",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "options_history_symbol_date_idx": {
+          "name": "options_history_symbol_date_idx",
+          "columns": [
+            {
+              "expression": "symbol",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "date",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

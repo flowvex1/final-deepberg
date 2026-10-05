@@ -1,0 +1,1022 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: stocks
+    description: Stock market data
+  - name: analysis
+    description: AI stock analysis
+  - name: options
+    description: Options chain and flow data
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /stocks/search:
+    get:
+      operationId: searchStocks
+      tags: [stocks]
+      summary: Search for stocks by symbol or name
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Search query (ticker or company name)
+      responses:
+        "200":
+          description: List of matching stocks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StockSearchResult"
+        "400":
+          description: Bad request
+
+  /stocks/{symbol}:
+    get:
+      operationId: getStockQuote
+      tags: [stocks]
+      summary: Get current stock quote and key metrics
+      parameters:
+        - name: symbol
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Stock ticker symbol (e.g. AAPL)
+      responses:
+        "200":
+          description: Stock quote and metrics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockQuote"
+        "404":
+          description: Stock not found
+
+  /stocks/{symbol}/history:
+    get:
+      operationId: getStockHistory
+      tags: [stocks]
+      summary: Get historical price data
+      parameters:
+        - name: symbol
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: period
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: ["1d", "5d", "1mo", "3mo", "6mo", "1y", "2y", "5y"]
+            default: "3mo"
+      responses:
+        "200":
+          description: Historical OHLCV data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PricePoint"
+        "404":
+          description: Stock not found
+
+  /stocks/{symbol}/news:
+    get:
+      operationId: getStockNews
+      tags: [stocks]
+      summary: Get recent news for a stock
+      parameters:
+        - name: symbol
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Recent news articles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NewsArticle"
+
+  /analysis/{symbol}:
+    post:
+      operationId: analyzeStock
+      tags: [analysis]
+      summary: Generate AI analysis for a stock
+      parameters:
+        - name: symbol
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: AI-generated analysis
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockAnalysis"
+        "404":
+          description: Stock not found
+
+  /market/movers:
+    get:
+      operationId: getMarketMovers
+      tags: [stocks]
+      summary: Get top market movers (gainers and losers)
+      responses:
+        "200":
+          description: Market movers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketMovers"
+
+  /iv-radar:
+    get:
+      operationId: getIVRadar
+      tags: [options]
+      summary: Get implied volatility data for multiple tickers
+      parameters:
+        - name: symbols
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Comma-separated list of symbols; defaults to standard watchlist
+      responses:
+        "200":
+          description: IV radar data for each symbol
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/IVSymbolData"
+
+  /news:
+    get:
+      operationId: getSectorNews
+      tags: [stocks]
+      summary: Get news articles filtered by market sector
+      parameters:
+        - name: sector
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [all, tech, energy, health, finance, consumer, industrial]
+            default: all
+      responses:
+        "200":
+          description: Sector news articles
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SectorNewsResult"
+
+  /market-summary:
+    get:
+      operationId: getMarketSummary
+      tags: [stocks]
+      summary: Get AI-generated market summary with index data
+      responses:
+        "200":
+          description: Market summary with indices and AI brief
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketSummary"
+
+  /analysis/{symbol}/longterm:
+    post:
+      operationId: analyzeLongTerm
+      tags: [analysis]
+      summary: AI long-term investment thesis for a stock
+      parameters:
+        - name: symbol
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Long-term investment analysis
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LongTermAnalysis"
+        "404":
+          description: Stock not found
+
+  /analysis/{symbol}/swing:
+    post:
+      operationId: analyzeSwing
+      tags: [analysis]
+      summary: AI swing trade setup and technical analysis
+      parameters:
+        - name: symbol
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Swing trade technical analysis
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SwingAnalysis"
+        "404":
+          description: Stock not found
+
+  /options/top-picks:
+    get:
+      operationId: getOptionsTopPicks
+      tags: [options]
+      summary: Top scored calls and puts across popular stocks
+      responses:
+        "200":
+          description: Best-scored calls and puts across popular tickers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TopOptionsPicks"
+
+  /options/{symbol}/analyze:
+    post:
+      operationId: analyzeOptionsFlow
+      tags: [options]
+      summary: AI analysis of options flow for a symbol
+      parameters:
+        - name: symbol
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: AI-generated options flow analysis
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OptionsFlowAnalysis"
+        "404":
+          description: No options data available
+
+  /options/{symbol}/history:
+    get:
+      operationId: getOptionsFlowHistory
+      tags: [options]
+      summary: Get historical put/call ratio and premium data for a symbol
+      parameters:
+        - name: symbol
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: days
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 30
+      responses:
+        "200":
+          description: Historical options flow snapshots
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OptionsFlowSnapshot"
+        "404":
+          description: No history found
+
+  /options/{symbol}:
+    get:
+      operationId: getOptionsFlow
+      tags: [options]
+      summary: Get options chain and flow data for a symbol
+      parameters:
+        - name: symbol
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Stock ticker symbol (e.g. AAPL)
+        - name: expiration
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Expiration date as ISO string; defaults to nearest expiry
+      responses:
+        "200":
+          description: Options flow data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OptionsFlow"
+        "404":
+          description: Symbol not found or no options available
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    StockSearchResult:
+      type: object
+      properties:
+        symbol:
+          type: string
+        name:
+          type: string
+        exchange:
+          type: string
+        type:
+          type: string
+      required:
+        - symbol
+        - name
+
+    StockQuote:
+      type: object
+      properties:
+        symbol:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+        change:
+          type: number
+        changePercent:
+          type: number
+        open:
+          type: number
+        high:
+          type: number
+        low:
+          type: number
+        previousClose:
+          type: number
+        volume:
+          type: number
+        marketCap:
+          type: number
+          nullable: true
+        peRatio:
+          type: number
+          nullable: true
+        eps:
+          type: number
+          nullable: true
+        dividendYield:
+          type: number
+          nullable: true
+        fiftyTwoWeekHigh:
+          type: number
+          nullable: true
+        fiftyTwoWeekLow:
+          type: number
+          nullable: true
+        avgVolume:
+          type: number
+          nullable: true
+        beta:
+          type: number
+          nullable: true
+        exchange:
+          type: string
+          nullable: true
+        currency:
+          type: string
+          nullable: true
+        sector:
+          type: string
+          nullable: true
+        industry:
+          type: string
+          nullable: true
+      required:
+        - symbol
+        - name
+        - price
+        - change
+        - changePercent
+
+    PricePoint:
+      type: object
+      properties:
+        date:
+          type: string
+        open:
+          type: number
+          nullable: true
+        high:
+          type: number
+          nullable: true
+        low:
+          type: number
+          nullable: true
+        close:
+          type: number
+        volume:
+          type: number
+          nullable: true
+      required:
+        - date
+        - close
+
+    NewsArticle:
+      type: object
+      properties:
+        title:
+          type: string
+        publisher:
+          type: string
+        link:
+          type: string
+        publishedAt:
+          type: string
+        thumbnail:
+          type: string
+          nullable: true
+        summary:
+          type: string
+          nullable: true
+      required:
+        - title
+        - publisher
+        - link
+        - publishedAt
+
+    SectorNewsResult:
+      type: object
+      properties:
+        sector:
+          type: string
+        label:
+          type: string
+        articles:
+          type: array
+          items:
+            $ref: "#/components/schemas/NewsArticle"
+      required:
+        - sector
+        - label
+        - articles
+
+    MarketIndex:
+      type: object
+      properties:
+        symbol:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+        change:
+          type: number
+        changePercent:
+          type: number
+      required:
+        - symbol
+        - name
+        - price
+        - change
+        - changePercent
+
+    MarketSummary:
+      type: object
+      properties:
+        indices:
+          type: array
+          items:
+            $ref: "#/components/schemas/MarketIndex"
+        mood:
+          type: string
+        summary:
+          type: string
+        topHeadlines:
+          type: array
+          items:
+            $ref: "#/components/schemas/NewsArticle"
+        generatedAt:
+          type: string
+      required:
+        - indices
+        - mood
+        - summary
+        - topHeadlines
+        - generatedAt
+
+    LongTermAnalysis:
+      type: object
+      properties:
+        symbol:
+          type: string
+        thesis:
+          type: string
+        growthCatalysts:
+          type: array
+          items:
+            type: string
+        longTermRisks:
+          type: array
+          items:
+            type: string
+        valuationView:
+          type: string
+        futureOutlook:
+          type: string
+        sentiment:
+          type: string
+          enum: ["bullish", "bearish", "neutral"]
+        priceTarget1Y:
+          type: number
+          nullable: true
+        priceTarget3Y:
+          type: number
+          nullable: true
+        generatedAt:
+          type: string
+      required:
+        - symbol
+        - thesis
+        - growthCatalysts
+        - longTermRisks
+        - valuationView
+        - futureOutlook
+        - sentiment
+        - generatedAt
+
+    SwingAnalysis:
+      type: object
+      properties:
+        symbol:
+          type: string
+        setup:
+          type: string
+        trend:
+          type: string
+          enum: ["uptrend", "downtrend", "sideways"]
+        momentum:
+          type: string
+          enum: ["strong_bullish", "bullish", "neutral", "bearish", "strong_bearish"]
+        keySupport:
+          type: number
+          nullable: true
+        keyResistance:
+          type: number
+          nullable: true
+        entryZone:
+          type: string
+        targetPrice:
+          type: number
+          nullable: true
+        stopLoss:
+          type: number
+          nullable: true
+        timeframe:
+          type: string
+        riskReward:
+          type: string
+        keyWatchLevels:
+          type: array
+          items:
+            type: string
+        tradingNotes:
+          type: string
+        generatedAt:
+          type: string
+      required:
+        - symbol
+        - setup
+        - trend
+        - momentum
+        - entryZone
+        - timeframe
+        - riskReward
+        - keyWatchLevels
+        - tradingNotes
+        - generatedAt
+
+    StockAnalysis:
+      type: object
+      properties:
+        symbol:
+          type: string
+        summary:
+          type: string
+        sentiment:
+          type: string
+          enum: ["bullish", "bearish", "neutral"]
+        sentimentScore:
+          type: number
+        keyStrengths:
+          type: array
+          items:
+            type: string
+        keyRisks:
+          type: array
+          items:
+            type: string
+        technicalOutlook:
+          type: string
+        fundamentalOutlook:
+          type: string
+        recommendation:
+          type: string
+          enum: ["strong_buy", "buy", "hold", "sell", "strong_sell"]
+        priceTarget:
+          type: number
+          nullable: true
+        generatedAt:
+          type: string
+      required:
+        - symbol
+        - summary
+        - sentiment
+        - sentimentScore
+        - keyStrengths
+        - keyRisks
+        - technicalOutlook
+        - fundamentalOutlook
+        - recommendation
+        - generatedAt
+
+    MarketMover:
+      type: object
+      properties:
+        symbol:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+        change:
+          type: number
+        changePercent:
+          type: number
+        volume:
+          type: number
+          nullable: true
+      required:
+        - symbol
+        - name
+        - price
+        - change
+        - changePercent
+
+    MarketMovers:
+      type: object
+      properties:
+        gainers:
+          type: array
+          items:
+            $ref: "#/components/schemas/MarketMover"
+        losers:
+          type: array
+          items:
+            $ref: "#/components/schemas/MarketMover"
+        mostActive:
+          type: array
+          items:
+            $ref: "#/components/schemas/MarketMover"
+      required:
+        - gainers
+        - losers
+        - mostActive
+
+    IVSymbolData:
+      type: object
+      properties:
+        symbol:
+          type: string
+        price:
+          type: number
+        currentIV:
+          type: number
+          description: Near-term ATM implied volatility (annualized %)
+        hv30:
+          type: number
+          description: 30-day historical volatility (annualized %)
+        hv60:
+          type: number
+          description: 60-day historical volatility (annualized %)
+        ivHvRatio:
+          type: number
+          description: currentIV / hv30 ratio; >1 means options are expensive
+        ivRank:
+          type: number
+          description: Approximate IV rank 0-100
+        termSlope:
+          type: number
+          description: Near-term IV minus far-term IV (positive = backwardation)
+        volume:
+          type: number
+        avgVolume:
+          type: number
+        volumeRatio:
+          type: number
+        changePercent:
+          type: number
+        error:
+          type: string
+          nullable: true
+      required:
+        - symbol
+        - price
+        - currentIV
+        - hv30
+        - hv60
+        - ivHvRatio
+        - ivRank
+        - termSlope
+        - volume
+        - avgVolume
+        - volumeRatio
+        - changePercent
+
+    OptionsFlowAnalysis:
+      type: object
+      properties:
+        symbol:
+          type: string
+        unusualSummary:
+          type: string
+        sentiment:
+          type: string
+          enum: ["bullish", "bearish", "neutral"]
+        momentumSignal:
+          type: string
+        keyBlocks:
+          type: array
+          items:
+            type: string
+        recommendation:
+          type: string
+        generatedAt:
+          type: string
+      required:
+        - symbol
+        - unusualSummary
+        - sentiment
+        - momentumSignal
+        - keyBlocks
+        - recommendation
+        - generatedAt
+
+    OptionContract:
+      type: object
+      properties:
+        contractSymbol:
+          type: string
+        type:
+          type: string
+          enum: ["call", "put"]
+        strike:
+          type: number
+        expiration:
+          type: string
+        lastPrice:
+          type: number
+        bid:
+          type: number
+        ask:
+          type: number
+        volume:
+          type: number
+        openInterest:
+          type: number
+        impliedVolatility:
+          type: number
+        inTheMoney:
+          type: boolean
+        change:
+          type: number
+        changePercent:
+          type: number
+        estimatedPremium:
+          type: number
+          description: Estimated total premium (volume * midpoint * 100)
+        unusualScore:
+          type: number
+          description: Volume to open interest ratio; high = unusual
+      required:
+        - contractSymbol
+        - type
+        - strike
+        - expiration
+        - lastPrice
+        - bid
+        - ask
+        - volume
+        - openInterest
+        - impliedVolatility
+        - inTheMoney
+        - change
+        - changePercent
+        - estimatedPremium
+        - unusualScore
+
+    OptionsFlowSnapshot:
+      type: object
+      properties:
+        symbol:
+          type: string
+        date:
+          type: string
+        putCallRatio:
+          type: number
+        totalCallVolume:
+          type: number
+        totalPutVolume:
+          type: number
+        callPremium:
+          type: number
+        putPremium:
+          type: number
+        unusualCount:
+          type: number
+        currentPrice:
+          type: number
+      required:
+        - symbol
+        - date
+        - putCallRatio
+        - totalCallVolume
+        - totalPutVolume
+        - callPremium
+        - putPremium
+        - unusualCount
+        - currentPrice
+
+    TopOptionPick:
+      type: object
+      properties:
+        symbol:
+          type: string
+        type:
+          type: string
+          enum: [call, put]
+        strike:
+          type: number
+        expiration:
+          type: string
+        score:
+          type: number
+        scorePercent:
+          type: number
+        tags:
+          type: array
+          items:
+            type: string
+        bid:
+          type: number
+        ask:
+          type: number
+        costPerContract:
+          type: number
+        volume:
+          type: number
+        openInterest:
+          type: number
+        impliedVolatility:
+          type: number
+        inTheMoney:
+          type: boolean
+        unusualScore:
+          type: number
+        currentPrice:
+          type: number
+        distancePct:
+          type: number
+      required:
+        - symbol
+        - type
+        - strike
+        - expiration
+        - score
+        - scorePercent
+        - tags
+        - bid
+        - ask
+        - costPerContract
+        - volume
+        - openInterest
+        - impliedVolatility
+        - inTheMoney
+        - unusualScore
+        - currentPrice
+        - distancePct
+
+    TopOptionsPicks:
+      type: object
+      properties:
+        calls:
+          type: array
+          items:
+            $ref: "#/components/schemas/TopOptionPick"
+        puts:
+          type: array
+          items:
+            $ref: "#/components/schemas/TopOptionPick"
+        tickers:
+          type: array
+          items:
+            type: string
+        generatedAt:
+          type: string
+      required:
+        - calls
+        - puts
+        - tickers
+        - generatedAt
+
+    OptionsFlow:
+      type: object
+      properties:
+        symbol:
+          type: string
+        currentPrice:
+          type: number
+        expirationDates:
+          type: array
+          items:
+            type: string
+        selectedExpiration:
+          type: string
+        putCallRatio:
+          type: number
+        totalCallVolume:
+          type: number
+        totalPutVolume:
+          type: number
+        callPremium:
+          type: number
+        putPremium:
+          type: number
+        calls:
+          type: array
+          items:
+            $ref: "#/components/schemas/OptionContract"
+        puts:
+          type: array
+          items:
+            $ref: "#/components/schemas/OptionContract"
+        unusualActivity:
+          type: array
+          items:
+            $ref: "#/components/schemas/OptionContract"
+      required:
+        - symbol
+        - currentPrice
+        - expirationDates
+        - selectedExpiration
+        - putCallRatio
+        - totalCallVolume
+        - totalPutVolume
+        - callPremium
+        - putPremium
+        - calls
+        - puts
+        - unusualActivity
