@@ -26,7 +26,7 @@ router.get("/ticker-tape", async (req, res) => {
       )
       .filter(Boolean);
 
-    cache.set(cacheKey, tickers, 10);
+    cache.set(cacheKey, tickers, 10_000);
     res.json(tickers);
   } catch (err) {
     req.log.error(err, "Ticker tape fetch failed");

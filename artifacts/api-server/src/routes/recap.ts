@@ -106,7 +106,7 @@ Rules:
       generatedAt:          new Date().toISOString(),
     };
 
-    cache.set(cacheKey, data, 30 * 60);
+    cache.set(cacheKey, data, 30 * 60_000);
     return res.json(data);
   } catch (err) {
     req.log.error({ err }, "Daily recap failed");

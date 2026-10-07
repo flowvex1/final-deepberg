@@ -217,7 +217,7 @@ Respond ONLY with valid JSON (no markdown, no code fences):
     };
 
     /* Cache: 3 min for market questions, 2 min for stock analysis */
-    cache.set(cacheKey, result, noSymbol ? 3 * 60 : 2 * 60);
+    cache.set(cacheKey, result, noSymbol ? 3 * 60_000 : 2 * 60_000);
     res.json(result);
   } catch (err) {
     req.log.error(err, "Ask Deepberg failed");

@@ -132,7 +132,7 @@ router.get("/stocks/:symbol/history", async (req, res) => {
         volume: q.volume ?? null,
       }));
 
-    const ttl = ["1m", "5m", "15m"].includes(period) ? 30 : TTL.HISTORY;
+    const ttl = ["1m", "5m", "15m"].includes(period) ? TTL.QUOTE : TTL.HISTORY;
     cache.set(cacheKey, data, ttl);
     return res.json(data);
   } catch (err) {
@@ -185,7 +185,7 @@ router.get("/stocks/:symbol/earnings", async (req, res) => {
     }
 
     raw.sort((a, b) => a.date.localeCompare(b.date));
-    cache.set(cacheKey, raw, 60 * 60);
+    cache.set(cacheKey, raw, 60 * 60_000);
     return res.json(raw);
   } catch (err) {
     req.log.error({ err }, "Earnings fetch failed");
@@ -403,7 +403,7 @@ router.get("/stocks/:symbol/confidence", async (req, res) => {
       raw: { beta, volRatio: parseFloat(volRatio.toFixed(2)), mom5d: parseFloat(mom5d.toFixed(2)), mom20d: parseFloat(mom20d.toFixed(2)), w52Pos: parseFloat(w52Pos.toFixed(3)), atrPct: parseFloat(atrPct.toFixed(2)) },
     };
 
-    cache.set(cacheKey, result, 5 * 60);
+    cache.set(cacheKey, result, 5 * 60_000);
     return res.json(result);
   } catch (err) {
     req.log.error({ err }, "Confidence score failed");

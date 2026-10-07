@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { openai, AI_MODEL, AI_ENABLED } from "@workspace/integrations-openai-ai-server";
 import { yf } from "../lib/yahoo";
-import { cache } from "../lib/cache";
+import { cache, TTL } from "../lib/cache";
 import { db, optionsHistory } from "@workspace/db";
 import { eq, desc, gte, and } from "drizzle-orm";
 import { validateSymbolParam } from "../lib/validation";
@@ -221,7 +221,7 @@ router.get("/options/top-picks", async (req, res) => {
       generatedAt: new Date().toISOString(),
     };
 
-    cache.set(cacheKey, result, 10 * 60);
+    cache.set(cacheKey, result, 10 * 60_000);
     res.json(result);
   } catch (err) {
     req.log.error(err, "Failed to fetch top picks");
@@ -314,7 +314,7 @@ router.get("/options/:symbol", async (req, res) => {
       unusualActivity,
     };
 
-    cache.set(cacheKey, result, 120);
+    cache.set(cacheKey, result, 2 * 60_000);
 
     // Fire-and-forget: persist today's snapshot to DB (only for nearest expiry, no expiration param)
     if (!expirationParam) {
@@ -475,7 +475,7 @@ Respond ONLY with valid JSON (no markdown):
       generatedAt: new Date().toISOString(),
     };
 
-    cache.set(cacheKey, result, 600);
+    cache.set(cacheKey, result, TTL.ANALYSIS);
     res.json(result);
   } catch (err) {
     req.log.error(err, "Options flow analysis failed");

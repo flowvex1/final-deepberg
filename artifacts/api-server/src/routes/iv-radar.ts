@@ -109,7 +109,7 @@ async function fetchIVData(symbol: string) {
       error: null,
     };
 
-    cache.set(cacheKey, result, 600);
+    cache.set(cacheKey, result, 10 * 60_000);
     return result;
   } catch (err) {
     return { symbol, price: 0, currentIV: 0, hv30: 0, hv60: 0, ivHvRatio: 0, ivRank: 0, termSlope: 0, volume: 0, avgVolume: 0, volumeRatio: 1, changePercent: 0, error: String(err) };

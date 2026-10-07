@@ -105,7 +105,7 @@ router.get("/economic-calendar", async (req, res) => {
       .sort((a: any, b: any) => a.date.localeCompare(b.date));
 
     const result = { events: shaped, from, to, generatedAt: new Date().toISOString() };
-    cache.set(cacheKey, result, 30 * 60); /* 30 min cache */
+    cache.set(cacheKey, result, 30 * 60_000); /* 30 min cache */
     return res.json(result);
   } catch (err) {
     req.log.error({ err }, "Economic calendar fetch failed");
