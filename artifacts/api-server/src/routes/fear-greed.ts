@@ -121,7 +121,7 @@ router.get("/fear-greed", async (req, res) => {
       components,
     };
 
-    cache.set(cacheKey, result, 10);
+    cache.set(cacheKey, result, 10_000);
     res.json(result);
   } catch (err) {
     req.log.error(err, "Fear & Greed calculation failed");

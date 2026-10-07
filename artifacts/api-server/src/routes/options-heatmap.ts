@@ -148,7 +148,7 @@ router.get("/options-heatmap/:symbol", async (req, res) => {
       updatedAt:      new Date().toISOString(),
     };
 
-    cache.set(cacheKey, result, 3 * 60);
+    cache.set(cacheKey, result, 3 * 60_000);
     res.json(result);
   } catch (err) {
     req.log.error(err, "Options heatmap failed");

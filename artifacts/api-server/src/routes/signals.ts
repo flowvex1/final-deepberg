@@ -285,7 +285,7 @@ router.get("/signals", async (req, res) => {
       generatedAt: new Date().toISOString(),
     };
 
-    cache.set(cacheKey, result, 5 * 60);
+    cache.set(cacheKey, result, 5 * 60_000);
     return res.json(result);
   } catch (err) {
     req.log.error({ err }, "Signals fetch failed");

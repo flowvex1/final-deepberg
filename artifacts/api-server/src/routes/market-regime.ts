@@ -332,7 +332,7 @@ router.get("/market-regime", async (req, res) => {
       updatedAt:       new Date().toISOString(),
     };
 
-    cache.set(cacheKey, result, 5 * 60);
+    cache.set(cacheKey, result, 5 * 60_000);
     res.json(result);
   } catch (err) {
     req.log.error(err, "Market regime detection failed");

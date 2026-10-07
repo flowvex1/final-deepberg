@@ -136,7 +136,7 @@ router.get("/sector-sentiment", async (req, res) => {
       }
     });
 
-    cache.set(cacheKey, result, 5 * 60);
+    cache.set(cacheKey, result, 5 * 60_000);
     res.json(result);
   } catch (err) {
     req.log.error(err, "Sector sentiment fetch failed");
@@ -207,7 +207,7 @@ Write 2-3 crisp sentences covering: overall direction, key macro driver, and wha
     } catch { /* fallback to empty */ }
 
     const result = { indices, mood, summary, topHeadlines, generatedAt: new Date().toISOString() };
-    cache.set(cacheKey, result, 15 * 60);
+    cache.set(cacheKey, result, 15 * 60_000);
     res.json(result);
   } catch (err) {
     req.log.error(err, "Market summary failed");

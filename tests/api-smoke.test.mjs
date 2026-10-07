@@ -79,3 +79,13 @@ test("economic calendar degrades gracefully without Finnhub", async () => {
   assert.equal(body.available, false);
   assert.deepEqual(body.events, []);
 });
+
+test("iv radar route is mounted", async () => {
+  const response = await fetch(`${baseUrl}/api/iv-radar?symbols=AAPL`);
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.ok(Array.isArray(body));
+  assert.equal(body.length, 1);
+  assert.equal(body[0].symbol, "AAPL");
+  assert.equal(typeof body[0].currentIV, "number");
+});

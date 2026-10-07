@@ -42,7 +42,7 @@ router.get("/sectors/heatmap", async (req, res) => {
       };
     });
 
-    cache.set(cacheKey, heatmap, 5);
+    cache.set(cacheKey, heatmap, 5_000);
     res.json(heatmap);
   } catch (err) {
     req.log.error(err, "Sector heatmap fetch failed");
